@@ -5,6 +5,39 @@ import { relations } from 'drizzle-orm';
 export const roleEnum = pgEnum('role', ['admin', 'player', 'coach']);
 export const activityTypeEnum = pgEnum('activity_type', ['lesson_created', 'lesson_updated', 'comment_added', 'user_joined', 'announcement']);
 
+// Categories Table (Hierarchical)
+export const categories = pgTable('categories', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  name: varchar('name', { length: 100 }).notNull(),
+  slug: varchar('slug', { length: 100 }).notNull().unique(),
+  description: text('description'),
+  parentId: uuid('parent_id'), // Self-reference for hierarchy
+  level: integer('level').notNull().default(0), // 0 = root, 1 = first child, etc.
+  order: integer('order').notNull().default(0), // For sorting within same level
+  icon: varchar('icon', { length: 50 }), // Optional icon name (e.g., 'ball', 'trophy')
+  color: varchar('color', { length: 7 }), // Optional hex color (e.g., '#3B82F6')
+  isActive: boolean('is_active').default(true).notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+}, (table) => ({
+  slugIdx: index('categories_slug_idx').on(table.slug),
+  parentIdIdx: index('categories_parent_id_idx').on(table.parentId),
+  levelIdx: index('categories_level_idx').on(table.level),
+}));
+
+// Lesson Categories Junction Table (Many-to-Many)
+export const lessonCategories = pgTable('lesson_categories', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  lessonId: uuid('lesson_id').notNull().references(() => lessons.id, { onDelete: 'cascade' }),
+  categoryId: uuid('category_id').notNull().references(() => categories.id, { onDelete: 'cascade' }),
+  isPrimary: boolean('is_primary').default(false).notNull(), // Mark one category as primary
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+}, (table) => ({
+  lessonIdIdx: index('lesson_categories_lesson_id_idx').on(table.lessonId),
+  categoryIdIdx: index('lesson_categories_category_id_idx').on(table.categoryId),
+  uniqueLessonCategory: index('unique_lesson_category').on(table.lessonId, table.categoryId),
+}));
+
 // Users Table
 export const users = pgTable('users', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -38,10 +71,10 @@ export const lessons = pgTable('lessons', {
   
   // Store content as structured JSON blocks
   // Example: [{ type: 'paragraph', content: 'text' }, { type: 'image', url: '...' }]
-  content: jsonb('content').notNull(),
+  // content: jsonb('content').notNull(),
   
   // Alternative: if you prefer raw HTML
-  // contentHtml: text('content_html').notNull(),
+  content: text('content').notNull(),
   
   createdBy: uuid('created_by').notNull().references(() => users.id),
   createdAt: timestamp('created_at').defaultNow().notNull(),
@@ -107,13 +140,12 @@ export const comments = pgTable('comments', {
   lessonId: uuid('lesson_id').notNull().references(() => lessons.id, { onDelete: 'cascade' }),
   userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
   content: text('content').notNull(),
-  parentId: uuid('parent_id'), // for nested comments - self-reference handled in relations
+  parentId: uuid('parent_id').references((): any => comments.id, { onDelete: 'cascade' }), // for nested comments
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 }, (table) => ({
   lessonIdIdx: index('comments_lesson_id_idx').on(table.lessonId),
   userIdIdx: index('comments_user_id_idx').on(table.userId),
-  parentIdIdx: index('comments_parent_id_idx').on(table.parentId),
 }));
 
 // Activity Feed / Announcements
@@ -142,15 +174,52 @@ export const activityFeed = pgTable('activity_feed', {
 }));
 
 // Relations (for Drizzle queries)
+// Categories Relations
+export const categoriesRelations = relations(categories, ({ one, many }) => ({
+  parent: one(categories, {
+    fields: [categories.parentId],
+    references: [categories.id],
+    relationName: 'categoryHierarchy',
+  }),
+  children: many(categories, { 
+    relationName: 'categoryHierarchy',
+  }),
+  lessonCategories: many(lessonCategories),
+}));
+
+// Lesson Categories Relations
+export const lessonCategoriesRelations = relations(lessonCategories, ({ one }) => ({
+  lesson: one(lessons, {
+    fields: [lessonCategories.lessonId],
+    references: [lessons.id],
+  }),
+  category: one(categories, {
+    fields: [lessonCategories.categoryId],
+    references: [categories.id],
+  }),
+}));
+
+// Users Relations
 export const usersRelations = relations(users, ({ many }) => ({
   roles: many(userRoles),
   createdLessons: many(lessons, { relationName: 'createdLessons' }),
+  updatedLessons: many(lessons, { relationName: 'updatedLessons' }),
   comments: many(comments),
   lessonProgress: many(userLessonProgress),
   lessonRatings: many(lessonRatings),
-  activities: many(activityFeed, { relationName: 'userActivities' }),
+  userActivities: many(activityFeed, { relationName: 'userActivities' }),
+  createdActivities: many(activityFeed, { relationName: 'createdActivities' }),
 }));
 
+// User Roles Relations
+export const userRolesRelations = relations(userRoles, ({ one }) => ({
+  user: one(users, {
+    fields: [userRoles.userId],
+    references: [users.id],
+  }),
+}));
+
+// Lessons Relations
 export const lessonsRelations = relations(lessons, ({ one, many }) => ({
   creator: one(users, {
     fields: [lessons.createdBy],
@@ -160,20 +229,16 @@ export const lessonsRelations = relations(lessons, ({ one, many }) => ({
   updater: one(users, {
     fields: [lessons.updatedBy],
     references: [users.id],
+    relationName: 'updatedLessons',
   }),
+  lessonCategories: many(lessonCategories),
   images: many(lessonImages),
   comments: many(comments),
   userProgress: many(userLessonProgress),
   ratings: many(lessonRatings),
 }));
 
-export const userRolesRelations = relations(userRoles, ({ one }) => ({
-  user: one(users, {
-    fields: [userRoles.userId],
-    references: [users.id],
-  }),
-}));
-
+// Lesson Images Relations
 export const lessonImagesRelations = relations(lessonImages, ({ one }) => ({
   lesson: one(lessons, {
     fields: [lessonImages.lessonId],
@@ -181,6 +246,7 @@ export const lessonImagesRelations = relations(lessonImages, ({ one }) => ({
   }),
 }));
 
+// User Lesson Progress Relations
 export const userLessonProgressRelations = relations(userLessonProgress, ({ one }) => ({
   user: one(users, {
     fields: [userLessonProgress.userId],
@@ -192,6 +258,7 @@ export const userLessonProgressRelations = relations(userLessonProgress, ({ one 
   }),
 }));
 
+// Lesson Ratings Relations
 export const lessonRatingsRelations = relations(lessonRatings, ({ one }) => ({
   user: one(users, {
     fields: [lessonRatings.userId],
@@ -203,21 +270,7 @@ export const lessonRatingsRelations = relations(lessonRatings, ({ one }) => ({
   }),
 }));
 
-export const activityFeedRelations = relations(activityFeed, ({ one }) => ({
-  lesson: one(lessons, {
-    fields: [activityFeed.lessonId],
-    references: [lessons.id],
-  }),
-  user: one(users, {
-    fields: [activityFeed.userId],
-    references: [users.id],
-  }),
-  creator: one(users, {
-    fields: [activityFeed.createdBy],
-    references: [users.id],
-  }),
-}));
-
+// Comments Relations
 export const commentsRelations = relations(comments, ({ one, many }) => ({
   lesson: one(lessons, {
     fields: [comments.lessonId],
@@ -232,7 +285,23 @@ export const commentsRelations = relations(comments, ({ one, many }) => ({
     references: [comments.id],
     relationName: 'commentReplies',
   }),
-  replies: many(comments, { 
-    relationName: 'commentReplies',
+  replies: many(comments, { relationName: 'commentReplies' }),
+}));
+
+// Activity Feed Relations
+export const activityFeedRelations = relations(activityFeed, ({ one }) => ({
+  lesson: one(lessons, {
+    fields: [activityFeed.lessonId],
+    references: [lessons.id],
+  }),
+  user: one(users, {
+    fields: [activityFeed.userId],
+    references: [users.id],
+    relationName: 'userActivities',
+  }),
+  creator: one(users, {
+    fields: [activityFeed.createdBy],
+    references: [users.id],
+    relationName: 'createdActivities',
   }),
 }));
