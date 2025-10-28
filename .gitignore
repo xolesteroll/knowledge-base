@@ -40,5 +40,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-#database migrations
+#database
 migrations/
+db/seed.ts
