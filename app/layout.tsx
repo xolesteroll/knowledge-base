@@ -61,7 +61,7 @@ export default function RootLayout({
             </NavigationMenuList>
           </NavigationMenu>
         </div>
-        <ScrollArea className="h-[calc(100vh-100px)] w-[75%] mx-auto p-4 border rounded-lg">
+        <ScrollArea className="h-[calc(100vh-100px)]  lg:w-[75%] w-full  mx-auto p-4 border rounded-lg">
           {children}
         </ScrollArea>
       </body>

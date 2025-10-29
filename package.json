@@ -10,6 +10,7 @@
     "seed": "tsx ./db/seed.ts"
   },
   "dependencies": {
+    "@lexical/react": "^0.38.1",
     "@neondatabase/serverless": "^1.0.2",
     "@radix-ui/react-navigation-menu": "^1.2.14",
     "@radix-ui/react-scroll-area": "^1.2.10",
@@ -18,6 +19,7 @@
     "clsx": "^2.1.1",
     "dotenv": "^17.2.3",
     "drizzle-orm": "^0.44.6",
+    "lexical": "^0.38.1",
     "lucide-react": "^0.546.0",
     "next": "15.5.6",
     "react": "19.1.0",

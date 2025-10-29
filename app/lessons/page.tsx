@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import { getAllLessons } from '@/db/queries';
 import Link from 'next/link';
 import React from 'react';
@@ -7,6 +8,9 @@ export default async function LessonsPage() {
     return (
         <div className="container mx-auto px-4 py-8">
             <h1 className="text-3xl font-bold mb-6">Lessons Page</h1>
+            <Button asChild>
+                <Link href="/lessons/create">Create New Lesson</Link>
+            </Button>
             {
                 lessons.map(lesson => (
                     <div key={lesson.id} className="mb-4">

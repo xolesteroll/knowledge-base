@@ -4,7 +4,9 @@ import { lessons, users } from './schema';
 import { eq } from 'drizzle-orm';
 
 export async function getAllLessons() {
-    return await db.query.lessons.findMany();
+    return await db.query.lessons.findMany({
+        orderBy: (lesson, { desc }) => [desc(lesson.createdAt)],
+    });
 };
 export async function getLessonById(id: UUID) {
     return await db.query.lessons.findFirst({
@@ -18,4 +20,10 @@ export async function getUserById(id: UUID) {
     return await db.query.users.findFirst({
         where: eq(users.id, id)
     });
+}
+export async function getAllCategories() {
+    return await db.query.categories.findMany();
+}
+export async function deleteLessonById(id: UUID) {
+    return await db.delete(lessons).where(eq(lessons.id, id));
 }
