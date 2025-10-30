@@ -2,8 +2,12 @@
 import DeleteLessonForm from '@/components/forms/delete-lesson-form';
 import { Button } from '@/components/ui/button';
 import { getLessonById, getUserById } from '@/db/queries';
+import { generateHTML } from '@tiptap/react';
 import { UUID } from 'crypto';
 import { notFound } from 'next/navigation';
+// import { Document } from '@tiptap/extension-document';
+// import { Text } from '@tiptap/extension-text';
+// import { Paragraph } from '@tiptap/extension-paragraph';
 
 interface LessonPageProps {
     params: {
@@ -29,7 +33,18 @@ export default async function LessonPage({ params }: LessonPageProps) {
                     <DeleteLessonForm lessonId={id as UUID} />
                 </div>
             </div>
-            <div dangerouslySetInnerHTML={{ __html: lesson.content }} />
+            <div>
+                {
+                    // generateHTML(lesson.content as JSON, [
+                    //     // Add any extensions used in the editor here
+                    //     // Example: Underline, Bold, Italic
+                    //     Document,
+                    //     Paragraph,
+                    //     Text,
+
+                    // ])
+                }
+            </div>
             <p className="mt-4">
                 <strong>Author:</strong> {lessonAuthor}
             </p>
