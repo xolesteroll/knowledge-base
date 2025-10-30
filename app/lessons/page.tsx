@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { getAllLessons } from '@/db/queries';
+import { sql } from 'drizzle-orm';
 import Link from 'next/link';
 import React from 'react';
 

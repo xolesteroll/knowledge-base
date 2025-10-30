@@ -72,10 +72,10 @@ export const lessons = pgTable('lessons', {
   
   // Store content as structured JSON blocks
   // Example: [{ type: 'paragraph', content: 'text' }, { type: 'image', url: '...' }]
-  // content: jsonb('content').notNull(),
+  content: jsonb('content').notNull(),
   
   // Alternative: if you prefer raw HTML
-  content: text('content').notNull(),
+  // content: text('content').notNull(),
   
   createdBy: uuid('created_by').notNull().references(() => users.id),
   createdAt: timestamp('created_at').defaultNow().notNull(),

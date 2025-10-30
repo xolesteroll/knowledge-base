@@ -1,34 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import { $getRoot } from 'lexical';
-import { LexicalComposer } from '@lexical/react/LexicalComposer';
-import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
-import { ContentEditable } from '@lexical/react/LexicalContentEditable';
-import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
-import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
-import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { createLesson } from '@/lib/actions';
 import { CreateLessonFormProps } from '@/lib/types/forms';
-
-function EditorCapturePlugin({ onContentChange }: { onContentChange: (content: string) => void }) {
-    const [editor] = useLexicalComposerContext();
-
-    editor.registerUpdateListener(({ editorState }) => {
-        editorState.read(() => {
-            const root = $getRoot();
-            onContentChange(JSON.stringify(editorState.toJSON()));
-        });
-    });
-
-    return null;
-}
-
-const initialConfig = {
-    namespace: 'LessonEditor',
-    theme: {},
-    onError: (error: Error) => console.error(error),
-};
+import { SimpleEditor } from '../tiptap-templates/simple/simple-editor';
 
 
 export const CreateLessonForm = ({
@@ -79,22 +54,8 @@ export const CreateLessonForm = ({
                 <label className="block text-sm font-medium mb-2">
                     Content
                 </label>
-                <div className="border border-gray-300 rounded-md">
-                    <LexicalComposer initialConfig={initialConfig}>
-                        <RichTextPlugin
-                            contentEditable={
-                                <ContentEditable className="min-h-96 p-4 outline-none" />
-                            }
-                            placeholder={
-                                <div className="absolute top-4 left-4 text-gray-400 pointer-events-none">
-                                    Enter lesson content...
-                                </div>
-                            }
-                            ErrorBoundary={LexicalErrorBoundary}
-                        />
-                        <HistoryPlugin />
-                        <EditorCapturePlugin onContentChange={setContent} />
-                    </LexicalComposer>
+                <div className="border border-gray-300 rounded-md relative">
+                    <SimpleEditor />
                 </div>
                 <input type="hidden" name="content" value={content} />
             </div>
