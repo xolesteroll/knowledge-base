@@ -3,14 +3,14 @@
 import React, { useState } from 'react';
 import { createLesson } from '@/lib/actions';
 import { CreateLessonFormProps } from '@/lib/types/forms';
-import { SimpleEditor } from '../tiptap-templates/simple/simple-editor';
+import TextEditor from '../tiptap/tiptap-editor';
 
 
 export const CreateLessonForm = ({
     categories
 }: CreateLessonFormProps) => {
     const [content, setContent] = useState('');
-    console.log('Categories in form:', categories);
+    console.log(content);
     return (
         <form action={createLesson} className="space-y-6">
             <div>
@@ -55,7 +55,7 @@ export const CreateLessonForm = ({
                     Content
                 </label>
                 <div className="border border-gray-300 rounded-md relative">
-                    <SimpleEditor />
+                    <TextEditor onEditorChange={(jsonContent) => setContent(JSON.stringify(jsonContent))} />
                 </div>
                 <input type="hidden" name="content" value={content} />
             </div>
