@@ -5,7 +5,6 @@ import { getLessonById, getUserById } from '@/db/queries';
 import { Extensions, generateHTML } from '@tiptap/react';
 import { UUID } from 'crypto';
 import { notFound } from 'next/navigation';
-import * as EditorExtensions from '@/components/tiptap/extensions';
 import TiptapRenderer from '@/components/tiptap/renderer/tiptap-renderer';
 
 interface LessonPageProps {

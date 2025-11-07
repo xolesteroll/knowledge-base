@@ -1,7 +1,7 @@
 'use client'
 
 import { useEditor, EditorContent, EditorContext, useEditorState } from '@tiptap/react'
-import * as EditorExtensions from './extensions'
+import { StarterKit } from '@tiptap/starter-kit'
 import { ToggleGroup, ToggleGroupItem } from '../ui/toggle-group'
 import { useMemo } from 'react'
 
@@ -14,7 +14,7 @@ const TextEditor = (
         }
 ) => {
     const editor = useEditor({
-        extensions: Array.from(Object.values(EditorExtensions)),
+        extensions: [StarterKit],
 
         content: '<p>Hello World! 🌎️</p>',
         // Don't render immediately on the server to avoid SSR issues
