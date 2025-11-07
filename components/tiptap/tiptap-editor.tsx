@@ -1,15 +1,7 @@
 'use client'
 
 import { useEditor, EditorContent, EditorContext, useEditorState } from '@tiptap/react'
-import StarterKit from '@tiptap/starter-kit'
-import BulletList from '@tiptap/extension-bullet-list'
-import BoldText from '@tiptap/extension-bold'
-import Document from '@tiptap/extension-document'
-import Paragraph from '@tiptap/extension-paragraph'
-import Text from '@tiptap/extension-text'
-import Heading from '@tiptap/extension-heading'
-import ItalicText from '@tiptap/extension-italic'
-
+import * as EditorExtensions from './extensions'
 import { ToggleGroup, ToggleGroupItem } from '../ui/toggle-group'
 import { useMemo } from 'react'
 
@@ -22,37 +14,16 @@ const TextEditor = (
         }
 ) => {
     const editor = useEditor({
-        extensions: [StarterKit,
-            BulletList,
-            BoldText,
-            ItalicText,
-            Document,
-            Paragraph,
-            Text,
-            Heading.configure({
-                levels: [1, 2, 3],
-            }),],
+        extensions: Array.from(Object.values(EditorExtensions)),
 
         content: '<p>Hello World! 🌎️</p>',
         // Don't render immediately on the server to avoid SSR issues
         immediatelyRender: false,
+        onUpdate: ({ editor }) => {
+            const jsonContent = editor.getJSON() as unknown as JSON;
+            onEditorChange?.(jsonContent)
+        }
     })
-
-    const editoreState = useEditorState({
-        editor,
-
-        selector: (editor) => {
-            if (!editor) return null
-
-            return {
-                isEditable: editor.editor?.isEditable,
-                currentSelection: editor.editor?.state.selection,
-                currentContent: editor.editor?.getJSON(),
-            }
-        },
-    })
-
-    const providerValue = useMemo(() => ({ editor }), [editor])
 
     const toggleBulletList = () => {
         if (editor) {
@@ -77,14 +48,8 @@ const TextEditor = (
         }
     }
 
-    const logState = () => {
-        if (editor) {
-            console.log(editoreState?.currentContent);
-        }
-    }
-
     return (
-        <EditorContext.Provider value={providerValue}>
+        <div>
             <ToggleGroup type='multiple' spacing={1}>
                 <ToggleGroupItem
                     value="bold"
@@ -104,8 +69,8 @@ const TextEditor = (
                 >1. List</ToggleGroupItem>
 
             </ToggleGroup>
-            <EditorContent editor={editor} onChange={logState} />
-        </EditorContext.Provider>
+            <EditorContent editor={editor} />
+        </div>
     )
 }
 

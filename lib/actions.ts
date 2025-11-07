@@ -12,7 +12,7 @@ import { UUID } from "crypto";
 
 export async function createLesson(formData: FormData) {
     const title = formData.get("title") as string;
-    const content = formData.get("content")?.toString() as string;
+    const content = formData.get("content");
     const categoryId = formData.get("category") as string;
     console.log('Creating lesson with categoryId:', formData);
     if (!title || !content || !categoryId) {
@@ -25,7 +25,7 @@ export async function createLesson(formData: FormData) {
             slug: slugify(title),
             title,
             content,
-            createdBy: '0022874c-c5fc-44df-a720-e5b627227a12',
+            createdBy: '23463718-122f-4397-9112-44d4b02dd5ba',
             publishedAt: new Date(),
         });
     } catch (error) {

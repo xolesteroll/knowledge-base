@@ -2,12 +2,11 @@
 import DeleteLessonForm from '@/components/forms/delete-lesson-form';
 import { Button } from '@/components/ui/button';
 import { getLessonById, getUserById } from '@/db/queries';
-import { generateHTML } from '@tiptap/react';
+import { Extensions, generateHTML } from '@tiptap/react';
 import { UUID } from 'crypto';
 import { notFound } from 'next/navigation';
-// import { Document } from '@tiptap/extension-document';
-// import { Text } from '@tiptap/extension-text';
-// import { Paragraph } from '@tiptap/extension-paragraph';
+import * as EditorExtensions from '@/components/tiptap/extensions';
+import TiptapRenderer from '@/components/tiptap/renderer/tiptap-renderer';
 
 interface LessonPageProps {
     params: {
@@ -19,10 +18,12 @@ export default async function LessonPage({ params }: LessonPageProps) {
     const { id } = await params;
     const lesson = await getLessonById(id as UUID);
     const lessonAuthor = await getUserById(lesson?.createdBy as UUID)?.then(user => user ? `${user.firstName} ${user.lastName}` : 'Unknown Author');
-
+     
     if (!lesson) {
         notFound();
     }
+
+    console.log(lesson.content);
 
     return (
         <div className="container mx-auto px-4 py-8">
@@ -34,16 +35,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
                 </div>
             </div>
             <div>
-                {
-                    // generateHTML(lesson.content as JSON, [
-                    //     // Add any extensions used in the editor here
-                    //     // Example: Underline, Bold, Italic
-                    //     Document,
-                    //     Paragraph,
-                    //     Text,
-
-                    // ])
-                }
+                <TiptapRenderer content={lesson.content as JSON} />
             </div>
             <p className="mt-4">
                 <strong>Author:</strong> {lessonAuthor}
