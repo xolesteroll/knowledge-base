@@ -70,7 +70,7 @@ export const EditLessonForm = ({
                     type="submit"
                     className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
-                    Create Lesson
+                    Update Lesson
                 </button>
                 <button
                     type="button"
