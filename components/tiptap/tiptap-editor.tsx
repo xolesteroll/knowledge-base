@@ -3,20 +3,21 @@
 import { useEditor, EditorContent, EditorContext, useEditorState } from '@tiptap/react'
 import { StarterKit } from '@tiptap/starter-kit'
 import { ToggleGroup, ToggleGroupItem } from '../ui/toggle-group'
-import { useMemo } from 'react'
 
 const TextEditor = (
     {
+        content,
         onEditorChange,
     }:
         {
+            content?: JSON | undefined,
             onEditorChange?: (jsonContent: JSON) => void
         }
 ) => {
     const editor = useEditor({
         extensions: [StarterKit],
 
-        content: '<p>Hello World! 🌎️</p>',
+        content: content || '<p>Hello World! 🌎️</p>',
         // Don't render immediately on the server to avoid SSR issues
         immediatelyRender: false,
         onUpdate: ({ editor }) => {
