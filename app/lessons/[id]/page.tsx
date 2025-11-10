@@ -25,8 +25,8 @@ export default async function LessonPage({ params }: LessonPageProps) {
     console.log(lesson.content);
 
     return (
-        <div className="container mx-auto px-4 py-8">
-            <div className="flex items-center justify-between absolute top-8 left-0 right-0 px-4 bg-background">
+        <div className="container mx-auto px-4 py-8 relative">
+            <div className="flex items-center justify-between sticky top-0 left-0 right-0 px-4 bg-background">
                 <h1 className="text-3xl font-bold mb-4">{lesson.title}</h1>
 
                 <div className="flex items-center gap-6">
@@ -39,9 +39,13 @@ export default async function LessonPage({ params }: LessonPageProps) {
             <div>
                 <TiptapRenderer content={lesson.content as JSON} />
             </div>
-            <p className="mt-4">
+            <div className="mt-4 sticky bottom-0 left-0 right-0 px-4 bg-background text-sm">
+                <span className="font-medium">Published:</span> {new Date(lesson.createdAt).toLocaleDateString()}
+                <span className="mx-2">|</span>
+                <span className="font-medium">Updated:</span> {new Date(lesson.updatedAt).toLocaleDateString()}
+                <span className="mx-2">|</span>
                 <strong>Author:</strong> {lessonAuthor}
-            </p>
+            </div>
         </div>
     );
 }

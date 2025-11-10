@@ -113,7 +113,7 @@
 }
 
 .tiptap {
-  @apply border border-gray-300 rounded-md p-2;
+  @apply border border-border rounded-md p-2;
 
   *, p {
     @apply selection:bg-primary/20 selection:text-primary-foreground dark:selection:bg-primary-foreground/20 dark:selection:text-primary;
