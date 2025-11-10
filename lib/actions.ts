@@ -7,6 +7,7 @@ import { redirect } from "next/navigation";
 import { slugify } from "./utils";
 import { deleteLessonById } from "@/db/queries";
 import { UUID } from "crypto";
+import { eq } from "drizzle-orm";
 
 
 
@@ -33,6 +34,31 @@ export async function createLesson(formData: FormData) {
         throw new Error("Failed to create lesson");
     }
 
+    revalidatePath("/lessons");
+    redirect("/lessons");
+}
+
+export async function updateLesson(formData: FormData) {
+    const title = formData.get("title") as string;
+    const content = formData.get("content");
+    const categoryId = formData.get("category") as string;
+    const lessonId = formData.get("id") as UUID;
+    console.log(content);
+    if (!title || !content || !categoryId) {
+        throw new Error("All fields are required");
+    }
+    try {
+        // Add your database logic here
+        await db.update(lessons).set({
+            slug: slugify(title),
+            title,
+            content,
+        }).where(eq(lessons.id, lessonId));
+    }
+    catch (error) {
+        console.error("Error editing lesson:", error);
+        throw new Error("Failed to edit lesson");
+    }
     revalidatePath("/lessons");
     redirect("/lessons");
 }
