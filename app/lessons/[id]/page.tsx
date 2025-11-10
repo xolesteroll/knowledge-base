@@ -2,10 +2,10 @@
 import DeleteLessonForm from '@/components/forms/delete-lesson-form';
 import { Button } from '@/components/ui/button';
 import { getLessonById, getUserById } from '@/db/queries';
-import { Extensions, generateHTML } from '@tiptap/react';
 import { UUID } from 'crypto';
 import { notFound } from 'next/navigation';
 import TiptapRenderer from '@/components/tiptap/renderer/tiptap-renderer';
+import Link from 'next/link';
 
 interface LessonPageProps {
     params: {
@@ -17,7 +17,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
     const { id } = await params;
     const lesson = await getLessonById(id as UUID);
     const lessonAuthor = await getUserById(lesson?.createdBy as UUID)?.then(user => user ? `${user.firstName} ${user.lastName}` : 'Unknown Author');
-     
+
     if (!lesson) {
         notFound();
     }
@@ -30,6 +30,9 @@ export default async function LessonPage({ params }: LessonPageProps) {
                 <h1 className="text-3xl font-bold mb-4">{lesson.title}</h1>
 
                 <div className="flex items-center gap-6">
+                    <Link href={`/lessons/edit/${id}`}>
+                        <Button variant="outline">Edit Lesson</Button>
+                    </Link>
                     <DeleteLessonForm lessonId={id as UUID} />
                 </div>
             </div>
