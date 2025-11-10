@@ -1,10 +1,12 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
+import { z } from "zod"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+// Handles: "Café Münchën" → "cafe-munchen"
 export function slugify(text: string): string {
   return text
     .toString()
@@ -19,4 +21,10 @@ export function slugify(text: string): string {
     .replace(/-+$/, '');
 }
 
-// Handles: "Café Münchën" → "cafe-munchen"
+
+
+// Check string is valid UUID
+export function isValidUUID(uuid: string): boolean {
+  const zodUUID = z.uuid();
+  return zodUUID.safeParse(uuid).success;
+}
