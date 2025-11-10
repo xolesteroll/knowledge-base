@@ -13,7 +13,7 @@ import { eq } from "drizzle-orm";
 
 export async function createLesson(formData: FormData) {
     const title = formData.get("title") as string;
-    const content = formData.get("content");
+    const content = formData.get("content") as unknown as JSON;
     const categoryId = formData.get("category") as string;
     console.log('Creating lesson with categoryId:', formData);
     if (!title || !content || !categoryId) {
