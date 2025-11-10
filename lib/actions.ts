@@ -40,7 +40,7 @@ export async function createLesson(formData: FormData) {
 
 export async function updateLesson(formData: FormData) {
     const title = formData.get("title") as string;
-    const content = formData.get("content");
+    const content = formData.get("content") as unknown as JSON;
     const categoryId = formData.get("category") as string;
     const lessonId = formData.get("id") as UUID;
     console.log(content);
