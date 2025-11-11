@@ -41,6 +41,9 @@ importers:
       '@radix-ui/react-toggle-group':
         specifier: ^1.1.11
         version: 1.1.11(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@tiptap/extension-emoji':
+        specifier: ^3.10.5
+        version: 3.10.5(@tiptap/core@3.10.2(@tiptap/pm@3.10.2))(@tiptap/pm@3.10.2)(@tiptap/suggestion@3.10.5(@tiptap/core@3.10.2(@tiptap/pm@3.10.2))(@tiptap/pm@3.10.2))(emojibase@16.0.0)
       '@tiptap/pm':
         specifier: ^3.10.2
         version: 3.10.2
@@ -50,6 +53,9 @@ importers:
       '@tiptap/starter-kit':
         specifier: ^3.10.2
         version: 3.10.2
+      '@tiptap/static-renderer':
+        specifier: ^3.10.5
+        version: 3.10.5(@tiptap/core@3.10.2(@tiptap/pm@3.10.2))(@tiptap/pm@3.10.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -1389,6 +1395,13 @@ packages:
     peerDependencies:
       '@tiptap/extensions': ^3.10.2
 
+  '@tiptap/extension-emoji@3.10.5':
+    resolution: {integrity: sha512-T9OAvdb1PvBk32wtebU/z/5ckrw1YkCx3UmfZFPYw1hppNutXPuTL7e52VHbxq3GxdF8FJ+GZ84IfxEV6aLsoQ==}
+    peerDependencies:
+      '@tiptap/core': ^3.10.5
+      '@tiptap/pm': ^3.10.5
+      '@tiptap/suggestion': ^3.10.5
+
   '@tiptap/extension-floating-menu@3.10.2':
     resolution: {integrity: sha512-B14/MFffhyowF4/OIive8Z/pL0LWxZxehVBMm4eGG09O01s9/oTc2pDkhMUxbR/1ip81Se1/i+KlTbxogcuduA==}
     peerDependencies:
@@ -1490,6 +1503,20 @@ packages:
 
   '@tiptap/starter-kit@3.10.2':
     resolution: {integrity: sha512-8eCl+kBkOiXH+k3AVU1F1l3GK7+/Y3hdu/FSfpgTm+jJ14e5VNUQaDPvqKDmCo1dlTzF1OCJPi91hhUeqcJLvw==}
+
+  '@tiptap/static-renderer@3.10.5':
+    resolution: {integrity: sha512-1ROVOFdy3Ifr0zNhejXFwbp2+e6dZ9Va3Zs4hmhMiBuV4UmJgl3LLlmQzQJLuYfy2ivSjysKvllQoROg8+JB+g==}
+    peerDependencies:
+      '@tiptap/core': ^3.10.5
+      '@tiptap/pm': ^3.10.5
+      react: ^17.0.0 || ^18.0.0 || ^19.0.0
+      react-dom: ^17.0.0 || ^18.0.0 || ^19.0.0
+
+  '@tiptap/suggestion@3.10.5':
+    resolution: {integrity: sha512-7bBd7L0+0u7tIgrs8U4Bb6dvxkrOlVTBb5BwfEa5jMqc0P0j3uw/rYRB/P5DwupavxVWi1KurhueNMPu477hJw==}
+    peerDependencies:
+      '@tiptap/core': ^3.10.5
+      '@tiptap/pm': ^3.10.5
 
   '@tybys/wasm-util@0.10.1':
     resolution: {integrity: sha512-9tTaPJLSiejZKx+Bmog4uSubteqTvFrVrURwkmHixBo0G4seD0zUxp98E1DzUBJxLQ3NPwXrGKDiVjwx/DpPsg==}
@@ -2007,8 +2034,20 @@ packages:
     resolution: {integrity: sha512-KIN/nDJBQRcXw0MLVhZE9iQHmG68qAVIBg9CqmUYjmQIhgij9U5MFvrqkUL5FbtyyzZuOeOt0zdeRe4UY7ct+A==}
     engines: {node: '>= 0.4'}
 
+  emoji-regex@10.6.0:
+    resolution: {integrity: sha512-toUI84YS5YmxW219erniWD0CIVOo46xGKColeNQRgOzDorgBi1v4D71/OFzgD9GO2UGKIv1C3Sp8DAn0+j5w7A==}
+
   emoji-regex@9.2.2:
     resolution: {integrity: sha512-L18DaJsXSUk2+42pv8mLs5jJT2hqFkFE4j21wOmgbUqsZ2hL72NsUU785g9RXgo3s0ZNgVl42TiHp3ZtOv/Vyg==}
+
+  emojibase-data@15.3.2:
+    resolution: {integrity: sha512-TpDyTDDTdqWIJixV5sTA6OQ0P0JfIIeK2tFRR3q56G9LK65ylAZ7z3KyBXokpvTTJ+mLUXQXbLNyVkjvnTLE+A==}
+    peerDependencies:
+      emojibase: '*'
+
+  emojibase@16.0.0:
+    resolution: {integrity: sha512-Nw2m7JLIO4Ou2X/yZPRNscHQXVbbr6SErjkJ7EooG7MbR3yDZszCv9KTizsXFc7yZl0n3WF+qUKIC/Lw6H9xaQ==}
+    engines: {node: '>=18.12.0'}
 
   enhanced-resolve@5.18.3:
     resolution: {integrity: sha512-d4lC8xfavMeBjzGr2vECC3fsGXziXZQyJxD868h2M/mBI3PwAuODxAkLkq5HYuvrPYcUtiLzsTo8U3PgX3Ocww==}
@@ -2385,6 +2424,9 @@ packages:
   is-date-object@1.1.0:
     resolution: {integrity: sha512-PwwhEakHVKTdRNVOw+/Gyh0+MzlCl4R6qKvkhuvLtPMggI1WAHt9sOwZxQLSGpUaDnrdyDsomoRgNnCfKNSXXg==}
     engines: {node: '>= 0.4'}
+
+  is-emoji-supported@0.0.5:
+    resolution: {integrity: sha512-WOlXUhDDHxYqcSmFZis+xWhhqXiK2SU0iYiqmth5Ip0FHLZQAt9rKL5ahnilE8/86WH8tZ3bmNNNC+bTzamqlw==}
 
   is-extglob@2.1.1:
     resolution: {integrity: sha512-SbKbANkN603Vi4jEZv49LeVJMn4yGwsbzZworEoyEiutsN3nJYdbO36zfhGJ6QEDpOZIFkDtnq5JRxmvl3jsoQ==}
@@ -4241,6 +4283,17 @@ snapshots:
     dependencies:
       '@tiptap/extensions': 3.10.2(@tiptap/core@3.10.2(@tiptap/pm@3.10.2))(@tiptap/pm@3.10.2)
 
+  '@tiptap/extension-emoji@3.10.5(@tiptap/core@3.10.2(@tiptap/pm@3.10.2))(@tiptap/pm@3.10.2)(@tiptap/suggestion@3.10.5(@tiptap/core@3.10.2(@tiptap/pm@3.10.2))(@tiptap/pm@3.10.2))(emojibase@16.0.0)':
+    dependencies:
+      '@tiptap/core': 3.10.2(@tiptap/pm@3.10.2)
+      '@tiptap/pm': 3.10.2
+      '@tiptap/suggestion': 3.10.5(@tiptap/core@3.10.2(@tiptap/pm@3.10.2))(@tiptap/pm@3.10.2)
+      emoji-regex: 10.6.0
+      emojibase-data: 15.3.2(emojibase@16.0.0)
+      is-emoji-supported: 0.0.5
+    transitivePeerDependencies:
+      - emojibase
+
   '@tiptap/extension-floating-menu@3.10.2(@floating-ui/dom@1.7.4)(@tiptap/core@3.10.2(@tiptap/pm@3.10.2))(@tiptap/pm@3.10.2)':
     dependencies:
       '@floating-ui/dom': 1.7.4
@@ -4376,6 +4429,18 @@ snapshots:
       '@tiptap/extension-text': 3.10.2(@tiptap/core@3.10.2(@tiptap/pm@3.10.2))
       '@tiptap/extension-underline': 3.10.2(@tiptap/core@3.10.2(@tiptap/pm@3.10.2))
       '@tiptap/extensions': 3.10.2(@tiptap/core@3.10.2(@tiptap/pm@3.10.2))(@tiptap/pm@3.10.2)
+      '@tiptap/pm': 3.10.2
+
+  '@tiptap/static-renderer@3.10.5(@tiptap/core@3.10.2(@tiptap/pm@3.10.2))(@tiptap/pm@3.10.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
+    dependencies:
+      '@tiptap/core': 3.10.2(@tiptap/pm@3.10.2)
+      '@tiptap/pm': 3.10.2
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
+
+  '@tiptap/suggestion@3.10.5(@tiptap/core@3.10.2(@tiptap/pm@3.10.2))(@tiptap/pm@3.10.2)':
+    dependencies:
+      '@tiptap/core': 3.10.2(@tiptap/pm@3.10.2)
       '@tiptap/pm': 3.10.2
 
   '@tybys/wasm-util@0.10.1':
@@ -4832,7 +4897,15 @@ snapshots:
       es-errors: 1.3.0
       gopd: 1.2.0
 
+  emoji-regex@10.6.0: {}
+
   emoji-regex@9.2.2: {}
+
+  emojibase-data@15.3.2(emojibase@16.0.0):
+    dependencies:
+      emojibase: 16.0.0
+
+  emojibase@16.0.0: {}
 
   enhanced-resolve@5.18.3:
     dependencies:
@@ -5408,6 +5481,8 @@ snapshots:
     dependencies:
       call-bound: 1.0.4
       has-tostringtag: 1.0.2
+
+  is-emoji-supported@0.0.5: {}
 
   is-extglob@2.1.1: {}
 
