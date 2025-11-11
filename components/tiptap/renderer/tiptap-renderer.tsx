@@ -1,15 +1,12 @@
-'use client'
 
+'use client';
 
-import { generateHTML } from '@tiptap/react';
-import { StarterKit } from '@tiptap/starter-kit';
-// import {renderToHTMLString} from '@tiptap/'
+import { renderToHTMLString } from '@tiptap/static-renderer';
+import tiptapExtensions from '../extensions';
 
 export default function TiptapRenderer({ content }: { content: JSON }) {
-    console.log('Rendering content:', content);
-    const html = generateHTML(content as JSON, [StarterKit]);
-    console.log('Generated HTML:', html);
+    const html = renderToHTMLString({ content: content as JSON, extensions: tiptapExtensions });
     return (
-        <div className='tiptap' dangerouslySetInnerHTML={{__html: html}} />
+        <div className='tiptap' dangerouslySetInnerHTML={{ __html: html }} />
     )
-}
+}   

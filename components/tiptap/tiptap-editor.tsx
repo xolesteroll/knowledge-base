@@ -2,7 +2,11 @@
 
 import { useEditor, EditorContent, EditorContext, useEditorState } from '@tiptap/react'
 import { StarterKit } from '@tiptap/starter-kit'
+import Emoji, { emojis } from '@tiptap/extension-emoji'
 import { ToggleGroup, ToggleGroupItem } from '../ui/toggle-group'
+import { EmojiPicker } from './components/emoji-picker'
+import { PokerDeckPicker } from './components/poker-deck-picker'
+import tiptapExtensions from './extensions'
 
 const TextEditor = (
     {
@@ -15,7 +19,7 @@ const TextEditor = (
         }
 ) => {
     const editor = useEditor({
-        extensions: [StarterKit],
+        extensions: tiptapExtensions,
 
         content: content || '<p>Hello World! 🌎️</p>',
         // Don't render immediately on the server to avoid SSR issues
@@ -49,6 +53,18 @@ const TextEditor = (
         }
     }
 
+    const handleEmojiSelect = (emojiName: string) => {
+        if (editor) {
+            editor.chain().focus().setEmoji(emojiName).run()
+        }
+    }
+
+    const handleCardSelect = (cardName: string) => {
+        if (editor) {
+            editor.chain().focus().setEmoji(cardName).run()
+        }
+    }
+
     return (
         <div>
             <ToggleGroup type='multiple' spacing={1}>
@@ -68,6 +84,8 @@ const TextEditor = (
                     value="numberedList"
                     onClick={toggleNumberedList}
                 >1. List</ToggleGroupItem>
+                <EmojiPicker onEmojiSelect={handleEmojiSelect} />
+                <PokerDeckPicker onCardSelect={handleCardSelect} />
 
             </ToggleGroup>
             <EditorContent editor={editor} />
