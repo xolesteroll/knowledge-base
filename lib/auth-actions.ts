@@ -7,7 +7,7 @@ import { eq, and, gt, desc } from 'drizzle-orm';
 import bcrypt from 'bcryptjs';
 import { signIn, signOut } from '@/lib/auth';
 import { revalidatePath } from 'next/cache';
-import { AuthError } from 'next-auth';
+// import { AuthError } from 'next-auth';
 import { AuthFormsState } from './types/forms';
 
 export async function registerUser(prevState: AuthFormsState, formData: FormData) {
@@ -85,129 +85,129 @@ export async function registerUser(prevState: AuthFormsState, formData: FormData
   }
 }
 
-export async function loginUser(formData: FormData) {
-  const email = formData.get('email') as string;
-  const password = formData.get('password') as string;
+// export async function loginUser(formData: FormData) {
+//   const email = formData.get('email') as string;
+//   const password = formData.get('password') as string;
 
-  if (!email || !password) {
-    return { error: 'Email and password are required' };
-  }
+//   if (!email || !password) {
+//     return { error: 'Email and password are required' };
+//   }
 
-  try {
-    await signIn('credentials', {
-      email,
-      password,
-      redirectTo: '/dashboard',
-    });
+//   try {
+//     await signIn('credentials', {
+//       email,
+//       password,
+//       redirectTo: '/dashboard',
+//     });
     
-    return { success: true };
-  } catch (error) {
-    if (error instanceof AuthError) {
-      switch (error.type) {
-        case 'CredentialsSignin':
-          return { error: 'Invalid email or password' };
-        default:
-          return { error: 'Something went wrong' };
-      }
-    }
-    throw error;
-  }
-}
+//     return { success: true };
+//   } catch (error) {
+//     if (error instanceof AuthError) {
+//       switch (error.type) {
+//         case 'CredentialsSignin':
+//           return { error: 'Invalid email or password' };
+//         default:
+//           return { error: 'Something went wrong' };
+//       }
+//     }
+//     throw error;
+//   }
+// }
 
-export async function logoutUser() {
-  await signOut({ redirectTo: '/login' });
-}
+// export async function logoutUser() {
+//   await signOut({ redirectTo: '/login' });
+// }
 
-// Admin functions for session management
-export async function getActiveSessions() {
-  const now = new Date();
+// // Admin functions for session management
+// export async function getActiveSessions() {
+//   const now = new Date();
   
-  const activeSessions = await db.query.sessions.findMany({
-    where: gt(sessions.expires, now),
-    with: {
-      user: {
-        with: {
-          roles: true,
-        },
-      },
-    },
-    orderBy: desc(sessions.createdAt),
-  });
+//   const activeSessions = await db.query.sessions.findMany({
+//     where: gt(sessions.expires, now),
+//     with: {
+//       user: {
+//         with: {
+//           roles: true,
+//         },
+//       },
+//     },
+//     orderBy: desc(sessions.createdAt),
+//   });
 
-  return activeSessions.map(session => ({
-    sessionToken: session.sessionToken,
-    userId: session.userId,
-    userName: session.user.name || `${session.user.firstName} ${session.user.lastName}`,
-    email: session.user.email,
-    roles: session.user.roles.map(r => r.role),
-    lastActive: session.createdAt,
-    expires: session.expires,
-  }));
-}
+//   return activeSessions.map(session => ({
+//     sessionToken: session.sessionToken,
+//     userId: session.userId,
+//     userName: session.user.name || `${session.user.firstName} ${session.user.lastName}`,
+//     email: session.user.email,
+//     roles: session.user.roles.map(r => r.role),
+//     lastActive: session.createdAt,
+//     expires: session.expires,
+//   }));
+// }
 
-export async function getUserSessions(userId: string) {
-  const now = new Date();
+// export async function getUserSessions(userId: string) {
+//   const now = new Date();
   
-  const userSessions = await db
-    .select()
-    .from(sessions)
-    .where(and(
-      eq(sessions.userId, userId),
-      gt(sessions.expires, now)
-    ))
-    .orderBy(desc(sessions.createdAt));
+//   const userSessions = await db
+//     .select()
+//     .from(sessions)
+//     .where(and(
+//       eq(sessions.userId, userId),
+//       gt(sessions.expires, now)
+//     ))
+//     .orderBy(desc(sessions.createdAt));
 
-  return userSessions;
-}
+//   return userSessions;
+// }
 
-export async function revokeSession(sessionToken: string) {
-  try {
-    await db
-      .delete(sessions)
-      .where(eq(sessions.sessionToken, sessionToken));
+// export async function revokeSession(sessionToken: string) {
+//   try {
+//     await db
+//       .delete(sessions)
+//       .where(eq(sessions.sessionToken, sessionToken));
     
-    revalidatePath('/admin/sessions');
-    return { success: true };
-  } catch (error) {
-    console.error('Error revoking session:', error);
-    return { error: 'Failed to revoke session' };
-  }
-}
+//     revalidatePath('/admin/sessions');
+//     return { success: true };
+//   } catch (error) {
+//     console.error('Error revoking session:', error);
+//     return { error: 'Failed to revoke session' };
+//   }
+// }
 
-export async function revokeAllUserSessions(userId: string) {
-  try {
-    await db
-      .delete(sessions)
-      .where(eq(sessions.userId, userId));
+// export async function revokeAllUserSessions(userId: string) {
+//   try {
+//     await db
+//       .delete(sessions)
+//       .where(eq(sessions.userId, userId));
     
-    revalidatePath('/admin/sessions');
-    revalidatePath('/admin/users');
-    return { success: true, message: 'All sessions revoked' };
-  } catch (error) {
-    console.error('Error revoking sessions:', error);
-    return { error: 'Failed to revoke sessions' };
-  }
-}
+//     revalidatePath('/admin/sessions');
+//     revalidatePath('/admin/users');
+//     return { success: true, message: 'All sessions revoked' };
+//   } catch (error) {
+//     console.error('Error revoking sessions:', error);
+//     return { error: 'Failed to revoke sessions' };
+//   }
+// }
 
-export async function toggleUserStatus(userId: string, isVerified: boolean) {
-  try {
-    // Update user status
-    await db
-      .update(users)
-      .set({ isVerified, updatedAt: new Date() })
-      .where(eq(users.id, userId));
+// export async function toggleUserStatus(userId: string, isVerified: boolean) {
+//   try {
+//     // Update user status
+//     await db
+//       .update(users)
+//       .set({ isVerified, updatedAt: new Date() })
+//       .where(eq(users.id, userId));
 
-    // If deactivating, revoke all sessions
-    if (!isVerified) {
-      await db
-        .delete(sessions)
-        .where(eq(sessions.userId, userId));
-    }
+//     // If deactivating, revoke all sessions
+//     if (!isVerified) {
+//       await db
+//         .delete(sessions)
+//         .where(eq(sessions.userId, userId));
+//     }
 
-    revalidatePath('/admin/users');
-    return { success: true };
-  } catch (error) {
-    console.error('Error toggling user status:', error);
-    return { error: 'Failed to update user status' };
-  }
-}
+//     revalidatePath('/admin/users');
+//     return { success: true };
+//   } catch (error) {
+//     console.error('Error toggling user status:', error);
+//     return { error: 'Failed to update user status' };
+//   }
+// }
