@@ -26,7 +26,7 @@ export async function createLesson(formData: FormData) {
             slug: slugify(title),
             title,
             content,
-            createdBy: '23463718-122f-4397-9112-44d4b02dd5ba',
+            createdBy: '2fd4bf36-01b0-496c-82dd-145b253bded4',
             publishedAt: new Date(),
         });
     } catch (error) {
