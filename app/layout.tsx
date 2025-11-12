@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/navigation-menu"
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Link from "next/link";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -64,6 +65,7 @@ export default function RootLayout({
         <ScrollArea className="h-[calc(100vh-100px)]  lg:w-[75%] w-full  mx-auto p-4 border rounded-lg">
           {children}
         </ScrollArea>
+        <Toaster />
       </body>
     </html>
   );
